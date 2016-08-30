@@ -23,6 +23,14 @@ if (args.Length() <= i || !args[i]->IsString()) {                         \
 }                                                                         \
 String::Utf8Value var(args[i]->ToString());                               \
 
+#define REQUIRED_BUFFER_ARG(i, buf, len)                                  \
+if (args.Length() <= i) {                                                 \
+  THROW_JS(v8::Exception::TypeError, "Argument " #i " must be a buffer"); \
+  return;                                                                 \
+}                                                                         \
+char * buf = node::Buffer::Data(args[i]);                                 \
+int len = node::Buffer::Length(args[i]);                                  \
+
 #define REQUIRED_UINT_ARG(i, var)                                                    \
 if (args.Length() <= i || !args[i]->IsUint32()) {                                    \
   THROW_JS(v8::Exception::TypeError, "Argument " #i " must be an unsigned integer"); \
